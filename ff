@@ -7,12 +7,20 @@ local function _kick(r)
     error("", 0)
 end
 
-local _orig_pcall = clonefunction and clonefunction(pcall) or pcall
-local _orig_type = clonefunction and clonefunction(type) or type
-local _orig_tostring = clonefunction and clonefunction(tostring) or tostring
-local _orig_ipairs = clonefunction and clonefunction(ipairs) or ipairs
-local _orig_rawget = clonefunction and clonefunction(rawget) or rawget
-local _orig_tonum = clonefunction and clonefunction(tonumber) or tonumber
+local function _clone(f)
+    if clonefunction then
+        local ok, res = pcall(clonefunction, f)
+        if ok and res then return res end
+    end
+    return f
+end
+
+local _orig_pcall = _clone(pcall)
+local _orig_type = _clone(type)
+local _orig_tostring = _clone(tostring)
+local _orig_ipairs = _clone(ipairs)
+local _orig_rawget = _clone(rawget)
+local _orig_tonum = _clone(tonumber)
 
 local _corefns = {
     pcall, xpcall, type, typeof, tostring, tonumber,
@@ -154,7 +162,7 @@ if _j1 * _j2 ~= _j1 * _j2 then _kick(".") end
 if _j1 + _j2 ~= _j2 + _j1 then _kick(".") end
 if (_j1 - _j1) ~= 0 then _kick(".") end
 
-local _valid = {ok = true, anotherkey = true}
+local _valid = {gerhghbrekger = true}
 
 if not _valid[_key] then
     _kick("lol wrong key.")
